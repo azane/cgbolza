@@ -30,7 +30,7 @@ cpdef double hatp(double x, size_t i_, size_t n_) except *:
     if x < (i/np1):
         return np1
     if x > (i/np1):
-        return -np1*x
+        return -np1
 
 
 cpdef double hat_dot_pow3(double x, double[:] w, size_t n) except *:

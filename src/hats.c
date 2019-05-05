@@ -1714,12 +1714,12 @@ static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
 static double __pyx_f_3src_4hats_hat(double, size_t, size_t, int __pyx_skip_dispatch); /*proto*/
+static double __pyx_f_3src_4hats_hatp(double, size_t, size_t, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_hat_dot_pow3(double, __Pyx_memviewslice, size_t, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_hatp_dot_pow3(double, __Pyx_memviewslice, size_t, int __pyx_skip_dispatch); /*proto*/
 static size_t __pyx_f_3src_4hats_idx_ct_4hats(size_t, size_t, size_t, size_t, size_t, int, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_int_hat_dot_pow3_hat(__Pyx_memviewslice, size_t, __Pyx_memviewslice, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_int_hatp_dot_pow3_hatp(__Pyx_memviewslice, size_t, __Pyx_memviewslice, int __pyx_skip_dispatch); /*proto*/
-static double __pyx_f_3src_4hats_hatp(double, size_t, size_t, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats__hat_dot_pow3(double, __Pyx_memviewslice, __Pyx_memviewslice, size_t); /*proto*/
 static double __pyx_f_3src_4hats_int_hatp_dot_pow1_hatp(__Pyx_memviewslice, size_t, __Pyx_memviewslice, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_int_4hats(size_t, size_t); /*proto*/
@@ -2476,7 +2476,7 @@ static double __pyx_f_3src_4hats_hatp(double __pyx_v_x, size_t __pyx_v_i_, size_
  *     if x < (i/np1):
  *         return np1             # <<<<<<<<<<<<<<
  *     if x > (i/np1):
- *         return -np1*x
+ *         return -np1
  */
     __pyx_r = __pyx_v_np1;
     goto __pyx_L0;
@@ -2494,7 +2494,7 @@ static double __pyx_f_3src_4hats_hatp(double __pyx_v_x, size_t __pyx_v_i_, size_
  *     if x < (i/np1):
  *         return np1
  *     if x > (i/np1):             # <<<<<<<<<<<<<<
- *         return -np1*x
+ *         return -np1
  * 
  */
   if (unlikely(__pyx_v_np1 == 0)) {
@@ -2507,18 +2507,18 @@ static double __pyx_f_3src_4hats_hatp(double __pyx_v_x, size_t __pyx_v_i_, size_
     /* "src/hats.pyx":33
  *         return np1
  *     if x > (i/np1):
- *         return -np1*x             # <<<<<<<<<<<<<<
+ *         return -np1             # <<<<<<<<<<<<<<
  * 
  * 
  */
-    __pyx_r = ((-__pyx_v_np1) * __pyx_v_x);
+    __pyx_r = (-__pyx_v_np1);
     goto __pyx_L0;
 
     /* "src/hats.pyx":32
  *     if x < (i/np1):
  *         return np1
  *     if x > (i/np1):             # <<<<<<<<<<<<<<
- *         return -np1*x
+ *         return -np1
  * 
  */
   }
@@ -19233,6 +19233,7 @@ static int __Pyx_modinit_function_export_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_export_code", 0);
   /*--- Function export code ---*/
   if (__Pyx_ExportFunction("hat", (void (*)(void))__pyx_f_3src_4hats_hat, "double (double, size_t, size_t, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("hatp", (void (*)(void))__pyx_f_3src_4hats_hatp, "double (double, size_t, size_t, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("hat_dot_pow3", (void (*)(void))__pyx_f_3src_4hats_hat_dot_pow3, "double (double, __Pyx_memviewslice, size_t, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("hatp_dot_pow3", (void (*)(void))__pyx_f_3src_4hats_hatp_dot_pow3, "double (double, __Pyx_memviewslice, size_t, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("idx_ct_4hats", (void (*)(void))__pyx_f_3src_4hats_idx_ct_4hats, "size_t (size_t, size_t, size_t, size_t, size_t, int, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
