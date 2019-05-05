@@ -1,2 +1,2 @@
-def say_hello_to(name):
+cpdef say_hello_to(name):
     print("Hello %s!" % name)
