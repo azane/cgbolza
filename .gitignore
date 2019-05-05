@@ -110,3 +110,5 @@ venv.bak/
 
 hats.html
 bolza.html
+
+cython_debug/
