@@ -1,3 +1,4 @@
+import numpy as np
 
 
 cpdef double hat(double x, size_t i_, size_t n_) except *:
@@ -17,6 +18,18 @@ cpdef double hat(double x, size_t i_, size_t n_) except *:
 
 
 cpdef double hat_dot_pow3(double x, double[:] w, size_t n) except *:
+
+    cdef:
+        double[:] h = np.empty(n, dtype=np.float64)
+        size_t i
+
+    for i in range(1, n+1):
+        h[i-1] = hat(x, i, n)
+
+    return _hat_dot_pow3(x, w, h, n)
+
+
+cdef double _hat_dot_pow3(double x, double[:] w, double[:] h, size_t n) except *:
     cdef:
         double s = 0
         size_t i, j, k
@@ -29,11 +42,12 @@ cpdef double hat_dot_pow3(double x, double[:] w, size_t n) except *:
                 for k in range(i-1, i+2):
                     if 1 > k or k >= n+1:
                         continue
-                    s += w[i-1] * w[j-1] * w[k-1] * hat(x, i, n) * hat(x, j, n) * hat(x, k, n)
+                    # s += w[i-1] * w[j-1] * w[k-1] * hat(x, i, n) * hat(x, j, n) * hat(x, k, n)
+                    s += w[i-1] * w[j-1] * w[k-1] * h[i-1] * h[j-1] * h[k-1]
             else:
                 # for k in (i, j)
-                s += w[i-1]**2. * w[j-1] * hat(x, i, n)**2. * hat(x, j, n)
-                s += w[j-1]**2. * w[i-1] * hat(x, j, n)**2. * hat(x, i, n)
+                s += w[i-1]**2. * w[j-1] * h[i-1]**2. * h[j-1]
+                s += w[j-1]**2. * w[i-1] * h[j-1]**2. * h[i-1]
 
     return s
 
@@ -44,6 +58,11 @@ cpdef double hat_dot_pow3(double x, double[:] w, size_t n) except *:
 
 
 # <Hat Integrals>
+
+cpdef double int_hat_dot_pow3_hat(double[:] w, double[:] h, size_t n) except *:
+    raise NotImplemented()
+
+
 cpdef size_t idx_ct_4hats(size_t i, size_t j, size_t k, size_t m, size_t n, bint check) except *:
 
     if check:
