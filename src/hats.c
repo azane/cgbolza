@@ -1715,12 +1715,12 @@ static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
 static double __pyx_f_3src_4hats_hat(double, size_t, size_t, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_hat_dot_pow3(double, __Pyx_memviewslice, size_t, int __pyx_skip_dispatch); /*proto*/
-static size_t __pyx_f_3src_4hats_idx_ct_4hats(size_t, size_t, size_t, size_t, size_t, int, int __pyx_skip_dispatch); /*proto*/
-static double __pyx_f_3src_4hats_hatp(double, size_t, size_t, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_hatp_dot_pow3(double, __Pyx_memviewslice, size_t, int __pyx_skip_dispatch); /*proto*/
-static double __pyx_f_3src_4hats__hat_dot_pow3(double, __Pyx_memviewslice, __Pyx_memviewslice, size_t); /*proto*/
+static size_t __pyx_f_3src_4hats_idx_ct_4hats(size_t, size_t, size_t, size_t, size_t, int, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_int_hat_dot_pow3_hat(__Pyx_memviewslice, size_t, __Pyx_memviewslice, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_int_hatp_dot_pow3_hatp(__Pyx_memviewslice, size_t, __Pyx_memviewslice, int __pyx_skip_dispatch); /*proto*/
+static double __pyx_f_3src_4hats_hatp(double, size_t, size_t, int __pyx_skip_dispatch); /*proto*/
+static double __pyx_f_3src_4hats__hat_dot_pow3(double, __Pyx_memviewslice, __Pyx_memviewslice, size_t); /*proto*/
 static double __pyx_f_3src_4hats_int_hatp_dot_pow1_hatp(__Pyx_memviewslice, size_t, __Pyx_memviewslice, int __pyx_skip_dispatch); /*proto*/
 static double __pyx_f_3src_4hats_int_4hats(size_t, size_t); /*proto*/
 static double __pyx_f_3src_4hats_int_4hatsp(size_t, size_t); /*proto*/
@@ -3670,7 +3670,7 @@ static double __pyx_f_3src_4hats_int_hat_dot_pow3_hat(__Pyx_memviewslice __pyx_v
  *                         continue
  *                     # Otherwise...compute.
  *                     ct = idx_ct_4hats(i, j, k, m, n, True)             # <<<<<<<<<<<<<<
- *                     gw[m] += w[i] * w[j] * w[k] * int_4hats(ct, n)
+ *                     gw[m-1] += w[i-1] * w[j-1] * w[k-1] * int_4hats(ct, n)
  * 
  */
           __pyx_t_21 = __pyx_f_3src_4hats_idx_ct_4hats(__pyx_v_i, __pyx_v_j, __pyx_v_k, __pyx_v_m, __pyx_v_n, 1, 0); if (unlikely(__pyx_t_21 == ((size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 153, __pyx_L1_error)
@@ -3679,25 +3679,25 @@ static double __pyx_f_3src_4hats_int_hat_dot_pow3_hat(__Pyx_memviewslice __pyx_v
           /* "src/hats.pyx":154
  *                     # Otherwise...compute.
  *                     ct = idx_ct_4hats(i, j, k, m, n, True)
- *                     gw[m] += w[i] * w[j] * w[k] * int_4hats(ct, n)             # <<<<<<<<<<<<<<
+ *                     gw[m-1] += w[i-1] * w[j-1] * w[k-1] * int_4hats(ct, n)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-          __pyx_t_21 = __pyx_v_i;
+          __pyx_t_21 = (__pyx_v_i - 1);
           __pyx_t_24 = -1;
           if (unlikely(__pyx_t_21 >= (size_t)__pyx_v_w.shape[0])) __pyx_t_24 = 0;
           if (unlikely(__pyx_t_24 != -1)) {
             __Pyx_RaiseBufferIndexError(__pyx_t_24);
             __PYX_ERR(0, 154, __pyx_L1_error)
           }
-          __pyx_t_26 = __pyx_v_j;
+          __pyx_t_26 = (__pyx_v_j - 1);
           __pyx_t_24 = -1;
           if (unlikely(__pyx_t_26 >= (size_t)__pyx_v_w.shape[0])) __pyx_t_24 = 0;
           if (unlikely(__pyx_t_24 != -1)) {
             __Pyx_RaiseBufferIndexError(__pyx_t_24);
             __PYX_ERR(0, 154, __pyx_L1_error)
           }
-          __pyx_t_27 = __pyx_v_k;
+          __pyx_t_27 = (__pyx_v_k - 1);
           __pyx_t_24 = -1;
           if (unlikely(__pyx_t_27 >= (size_t)__pyx_v_w.shape[0])) __pyx_t_24 = 0;
           if (unlikely(__pyx_t_24 != -1)) {
@@ -3705,7 +3705,7 @@ static double __pyx_f_3src_4hats_int_hat_dot_pow3_hat(__Pyx_memviewslice __pyx_v
             __PYX_ERR(0, 154, __pyx_L1_error)
           }
           __pyx_t_28 = __pyx_f_3src_4hats_int_4hats(__pyx_v_ct, __pyx_v_n); if (unlikely(__pyx_t_28 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 154, __pyx_L1_error)
-          __pyx_t_29 = __pyx_v_m;
+          __pyx_t_29 = (__pyx_v_m - 1);
           __pyx_t_24 = -1;
           if (unlikely(__pyx_t_29 >= (size_t)__pyx_v_gw.shape[0])) __pyx_t_24 = 0;
           if (unlikely(__pyx_t_24 != -1)) {
@@ -4079,7 +4079,7 @@ static double __pyx_f_3src_4hats_int_hatp_dot_pow3_hatp(__Pyx_memviewslice __pyx
  *                         continue
  *                     # Otherwise...compute.
  *                     ct = idx_ct_4hats(i, j, k, m, n, True)             # <<<<<<<<<<<<<<
- *                     gw[m] += w[i] * w[j] * w[k] * int_4hatsp(ct, n)
+ *                     gw[m-1] += w[i-1] * w[j-1] * w[k-1] * int_4hatsp(ct, n)
  * 
  */
           __pyx_t_21 = __pyx_f_3src_4hats_idx_ct_4hats(__pyx_v_i, __pyx_v_j, __pyx_v_k, __pyx_v_m, __pyx_v_n, 1, 0); if (unlikely(__pyx_t_21 == ((size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L1_error)
@@ -4088,25 +4088,25 @@ static double __pyx_f_3src_4hats_int_hatp_dot_pow3_hatp(__Pyx_memviewslice __pyx
           /* "src/hats.pyx":172
  *                     # Otherwise...compute.
  *                     ct = idx_ct_4hats(i, j, k, m, n, True)
- *                     gw[m] += w[i] * w[j] * w[k] * int_4hatsp(ct, n)             # <<<<<<<<<<<<<<
+ *                     gw[m-1] += w[i-1] * w[j-1] * w[k-1] * int_4hatsp(ct, n)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-          __pyx_t_21 = __pyx_v_i;
+          __pyx_t_21 = (__pyx_v_i - 1);
           __pyx_t_24 = -1;
           if (unlikely(__pyx_t_21 >= (size_t)__pyx_v_w.shape[0])) __pyx_t_24 = 0;
           if (unlikely(__pyx_t_24 != -1)) {
             __Pyx_RaiseBufferIndexError(__pyx_t_24);
             __PYX_ERR(0, 172, __pyx_L1_error)
           }
-          __pyx_t_26 = __pyx_v_j;
+          __pyx_t_26 = (__pyx_v_j - 1);
           __pyx_t_24 = -1;
           if (unlikely(__pyx_t_26 >= (size_t)__pyx_v_w.shape[0])) __pyx_t_24 = 0;
           if (unlikely(__pyx_t_24 != -1)) {
             __Pyx_RaiseBufferIndexError(__pyx_t_24);
             __PYX_ERR(0, 172, __pyx_L1_error)
           }
-          __pyx_t_27 = __pyx_v_k;
+          __pyx_t_27 = (__pyx_v_k - 1);
           __pyx_t_24 = -1;
           if (unlikely(__pyx_t_27 >= (size_t)__pyx_v_w.shape[0])) __pyx_t_24 = 0;
           if (unlikely(__pyx_t_24 != -1)) {
@@ -4114,7 +4114,7 @@ static double __pyx_f_3src_4hats_int_hatp_dot_pow3_hatp(__Pyx_memviewslice __pyx
             __PYX_ERR(0, 172, __pyx_L1_error)
           }
           __pyx_t_28 = __pyx_f_3src_4hats_int_4hatsp(__pyx_v_ct, __pyx_v_n); if (unlikely(__pyx_t_28 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L1_error)
-          __pyx_t_29 = __pyx_v_m;
+          __pyx_t_29 = (__pyx_v_m - 1);
           __pyx_t_24 = -1;
           if (unlikely(__pyx_t_29 >= (size_t)__pyx_v_gw.shape[0])) __pyx_t_24 = 0;
           if (unlikely(__pyx_t_24 != -1)) {
@@ -4313,7 +4313,7 @@ static double __pyx_f_3src_4hats_int_hatp_dot_pow1_hatp(__Pyx_memviewslice __pyx
  *         for i in range(m-1, m+2):
  *             if m == i: ct = 1             # <<<<<<<<<<<<<<
  *             if m != i: ct = 2
- *             gw[m] += w[i] * int_2hatsp(ct, n)
+ *             gw[m-1] += w[i-1] * int_2hatsp(ct, n)
  */
       __pyx_t_7 = ((__pyx_v_m == __pyx_v_i) != 0);
       if (__pyx_t_7) {
@@ -4324,7 +4324,7 @@ static double __pyx_f_3src_4hats_int_hatp_dot_pow1_hatp(__Pyx_memviewslice __pyx
  *         for i in range(m-1, m+2):
  *             if m == i: ct = 1
  *             if m != i: ct = 2             # <<<<<<<<<<<<<<
- *             gw[m] += w[i] * int_2hatsp(ct, n)
+ *             gw[m-1] += w[i-1] * int_2hatsp(ct, n)
  * 
  */
       __pyx_t_7 = ((__pyx_v_m != __pyx_v_i) != 0);
@@ -4335,11 +4335,11 @@ static double __pyx_f_3src_4hats_int_hatp_dot_pow1_hatp(__Pyx_memviewslice __pyx
       /* "src/hats.pyx":184
  *             if m == i: ct = 1
  *             if m != i: ct = 2
- *             gw[m] += w[i] * int_2hatsp(ct, n)             # <<<<<<<<<<<<<<
+ *             gw[m-1] += w[i-1] * int_2hatsp(ct, n)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-      __pyx_t_8 = __pyx_v_i;
+      __pyx_t_8 = (__pyx_v_i - 1);
       __pyx_t_9 = -1;
       if (unlikely(__pyx_t_8 >= (size_t)__pyx_v_w.shape[0])) __pyx_t_9 = 0;
       if (unlikely(__pyx_t_9 != -1)) {
@@ -4347,7 +4347,7 @@ static double __pyx_f_3src_4hats_int_hatp_dot_pow1_hatp(__Pyx_memviewslice __pyx
         __PYX_ERR(0, 184, __pyx_L1_error)
       }
       __pyx_t_10 = __pyx_f_3src_4hats_int_2hatsp(__pyx_v_ct, __pyx_v_n); if (unlikely(__pyx_t_10 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
-      __pyx_t_11 = __pyx_v_m;
+      __pyx_t_11 = (__pyx_v_m - 1);
       __pyx_t_9 = -1;
       if (unlikely(__pyx_t_11 >= (size_t)__pyx_v_gw.shape[0])) __pyx_t_9 = 0;
       if (unlikely(__pyx_t_9 != -1)) {
@@ -19234,7 +19234,10 @@ static int __Pyx_modinit_function_export_code(void) {
   /*--- Function export code ---*/
   if (__Pyx_ExportFunction("hat", (void (*)(void))__pyx_f_3src_4hats_hat, "double (double, size_t, size_t, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("hat_dot_pow3", (void (*)(void))__pyx_f_3src_4hats_hat_dot_pow3, "double (double, __Pyx_memviewslice, size_t, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("hatp_dot_pow3", (void (*)(void))__pyx_f_3src_4hats_hatp_dot_pow3, "double (double, __Pyx_memviewslice, size_t, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("idx_ct_4hats", (void (*)(void))__pyx_f_3src_4hats_idx_ct_4hats, "size_t (size_t, size_t, size_t, size_t, size_t, int, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("int_hat_dot_pow3_hat", (void (*)(void))__pyx_f_3src_4hats_int_hat_dot_pow3_hat, "double (__Pyx_memviewslice, size_t, __Pyx_memviewslice, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("int_hatp_dot_pow3_hatp", (void (*)(void))__pyx_f_3src_4hats_int_hatp_dot_pow3_hatp, "double (__Pyx_memviewslice, size_t, __Pyx_memviewslice, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;

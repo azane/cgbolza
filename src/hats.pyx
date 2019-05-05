@@ -151,7 +151,7 @@ cpdef double int_hat_dot_pow3_hat(double[:] w, size_t n, double[:] gw) except *:
                         continue
                     # Otherwise...compute.
                     ct = idx_ct_4hats(i, j, k, m, n, True)
-                    gw[m] += w[i] * w[j] * w[k] * int_4hats(ct, n)
+                    gw[m-1] += w[i-1] * w[j-1] * w[k-1] * int_4hats(ct, n)
 
 
 cpdef double int_hatp_dot_pow3_hatp(double[:] w, size_t n, double[:] gw) except *:
@@ -169,7 +169,7 @@ cpdef double int_hatp_dot_pow3_hatp(double[:] w, size_t n, double[:] gw) except 
                         continue
                     # Otherwise...compute.
                     ct = idx_ct_4hats(i, j, k, m, n, True)
-                    gw[m] += w[i] * w[j] * w[k] * int_4hatsp(ct, n)
+                    gw[m-1] += w[i-1] * w[j-1] * w[k-1] * int_4hatsp(ct, n)
 
 
 cpdef double int_hatp_dot_pow1_hatp(double[:] w, size_t n, double[:] gw) except *:
@@ -181,7 +181,7 @@ cpdef double int_hatp_dot_pow1_hatp(double[:] w, size_t n, double[:] gw) except 
         for i in range(m-1, m+2):
             if m == i: ct = 1
             if m != i: ct = 2
-            gw[m] += w[i] * int_2hatsp(ct, n)
+            gw[m-1] += w[i-1] * int_2hatsp(ct, n)
 
 
 cpdef size_t idx_ct_4hats(size_t i, size_t j, size_t k, size_t m, size_t n, bint check) except *:
