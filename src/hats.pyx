@@ -1,5 +1,4 @@
 import numpy as np
-from libcpp.vector cimport vector
 
 
 cpdef double hat(double x, size_t i_, size_t n_) except *:
@@ -18,6 +17,22 @@ cpdef double hat(double x, size_t i_, size_t n_) except *:
         return i - np1*x + 1
 
 
+cpdef double hatp(double x, size_t i_, size_t n_) except *:
+    cdef:
+        double i = <double>i_
+        double np1 = <double>(n_+1)
+
+    if x < ((i-1)/np1):
+        return 0
+    if x > ((i+1)/np1):
+        return 0
+
+    if x < (i/np1):
+        return np1
+    if x > (i/np1):
+        return -np1*x
+
+
 cpdef double hat_dot_pow3(double x, double[:] w, size_t n) except *:
 
     cdef:
@@ -26,6 +41,18 @@ cpdef double hat_dot_pow3(double x, double[:] w, size_t n) except *:
 
     for i in range(1, n+1):
         h[i-1] = hat(x, i, n)
+
+    return _hat_dot_pow3(x, w, h, n)
+
+
+cpdef double hatp_dot_pow3(double x, double[:] w, size_t n) except *:
+
+    cdef:
+        double[:] h = np.empty(n, dtype=np.float64)
+        size_t i
+
+    for i in range(1, n+1):
+        h[i-1] = hatp(x, i, n)
 
     return _hat_dot_pow3(x, w, h, n)
 
@@ -73,12 +100,6 @@ cdef double _hat_dot_pow3(double x, double[:] w, double[:] h, size_t n) except *
 #                 for j in seen_:
 #
 
-
-
-# TODO also this will allow us to pass in gradient values or actual values.
-# TODO make a dot_pow4 so we can easily compute the the full integrand.
-
-
 # <Hat Integrals>
 
 # # TODO this is the basis for a recursive version. We just need ijk to be in a collection.
@@ -119,17 +140,48 @@ cpdef double int_hat_dot_pow3_hat(double[:] w, size_t n, double[:] gw) except *:
 
     cdef:
         size_t i, j, k, m, ct
+        size_t[:] s
 
     for m in range(1, n+1):
         for i in range(m-1, m+2):
             for j in range(m-1, m+2):
                 for k in range(m-1, m+2):
-                    s = list({m, i, j, k})
+                    s = np.array(list({m, i, j, k}), dtype=np.uintp)
                     if len(s) > 2 or (len(s) == 2 and abs(s[0] - s[1]) > 1):
                         continue
                     # Otherwise...compute.
                     ct = idx_ct_4hats(i, j, k, m, n, True)
                     gw[m] += w[i] * w[j] * w[k] * int_4hats(ct, n)
+
+
+cpdef double int_hatp_dot_pow3_hatp(double[:] w, size_t n, double[:] gw) except *:
+
+    cdef:
+        size_t i, j, k, m, ct
+        size_t[:] s
+
+    for m in range(1, n+1):
+        for i in range(m-1, m+2):
+            for j in range(m-1, m+2):
+                for k in range(m-1, m+2):
+                    s = np.array(list({m, i, j, k}), dtype=np.uintp)
+                    if len(s) > 2 or (len(s) == 2 and abs(s[0] - s[1]) > 1):
+                        continue
+                    # Otherwise...compute.
+                    ct = idx_ct_4hats(i, j, k, m, n, True)
+                    gw[m] += w[i] * w[j] * w[k] * int_4hatsp(ct, n)
+
+
+cpdef double int_hatp_dot_pow1_hatp(double[:] w, size_t n, double[:] gw) except *:
+
+    cdef:
+        size_t i, m, ct
+
+    for m in range(1, n+1):
+        for i in range(m-1, m+2):
+            if m == i: ct = 1
+            if m != i: ct = 2
+            gw[m] += w[i] * int_2hatsp(ct, n)
 
 
 cpdef size_t idx_ct_4hats(size_t i, size_t j, size_t k, size_t m, size_t n, bint check) except *:
@@ -160,7 +212,7 @@ cpdef size_t idx_ct_4hats(size_t i, size_t j, size_t k, size_t m, size_t n, bint
     return max(ct1, ct2)
 
 
-cdef double int_4hats(size_t idx_ct, size_t n_):
+cdef double int_4hats(size_t idx_ct, size_t n_) except *:
     cdef double n = <double>n_
 
     if idx_ct == 2:
@@ -171,7 +223,7 @@ cdef double int_4hats(size_t idx_ct, size_t n_):
         return 2./(5.*(n+1.))
 
 
-cdef double int_4hatsp(size_t idx_ct, size_t n_):
+cdef double int_4hatsp(size_t idx_ct, size_t n_) except *:
     cdef double n = <double>n_
 
     if idx_ct == 2:
@@ -181,7 +233,7 @@ cdef double int_4hatsp(size_t idx_ct, size_t n_):
     if idx_ct == 4:
         return 2*(n+1.)**3.
 
-cdef double int_2hatsp(size_t idx_ct, size_t n_):
+cdef double int_2hatsp(size_t idx_ct, size_t n_) except *:
     cdef double n = <double>n_
 
     if idx_ct == 1:
