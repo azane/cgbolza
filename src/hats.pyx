@@ -1,4 +1,5 @@
 import numpy as np
+from libcpp.vector cimport vector
 
 
 cpdef double hat(double x, size_t i_, size_t n_) except *:
@@ -29,6 +30,7 @@ cpdef double hat_dot_pow3(double x, double[:] w, size_t n) except *:
     return _hat_dot_pow3(x, w, h, n)
 
 
+# TODO implement a recursive model of this that can take arbitrary powers.
 cdef double _hat_dot_pow3(double x, double[:] w, double[:] h, size_t n) except *:
     cdef:
         double s = 0
@@ -51,16 +53,83 @@ cdef double _hat_dot_pow3(double x, double[:] w, double[:] h, size_t n) except *
 
     return s
 
-# TODO change dot pow to just take vectors.
-# TODO precompute the hat vectors for each value, this will actually be faster.
+
+# cdef double _dot_pow(double[:] a, double[:] b, size_t pow, size_t[:] seen_, size_t depth) except *:
+#
+#     # If the previous iterates are equal, we iter around them, otherwise
+#     #  we iter through the two options.
+#     seen = list(set(seen_))
+#
+#     cdef:
+#         double s = 0
+#         double p = 1
+#
+#     if len(s) == 1:
+#         for i in range(s[0]-1, s[0]+2):
+#
+#
+#             if depth == pow:
+#                 p = 1
+#                 for j in seen_:
+#
+
+
+
 # TODO also this will allow us to pass in gradient values or actual values.
 # TODO make a dot_pow4 so we can easily compute the the full integrand.
 
 
 # <Hat Integrals>
 
-cpdef double int_hat_dot_pow3_hat(double[:] w, double[:] h, size_t n) except *:
-    raise NotImplemented()
+# # TODO this is the basis for a recursive version. We just need ijk to be in a collection.
+# cdef double _int_hat_dot_pow3_hat_inner(i, j, k, double[:] w, size_t n, double[:] gw) except *:
+#
+#     cdef size_t ct
+#
+#     if i == j and i == k:
+#         for m in range(i-1, i+2):
+#             ct = idx_ct_4hats(i, j, k, m, n, True)
+#             gw[m] += w[i] * w[j] * w[k] *
+#     else:
+#         for m in (i, j, k):
+#             pass
+#
+#
+# cpdef void int_hat_dot_pow3_hat(double[:] w, size_t n, double[:] gw) except *:
+#     cdef:
+#         size_t i, j, k, m
+#
+#     gw[:] = 0
+#
+#     for i in range(1, n+1):
+#         for j in range(i-1, i+2):
+#             if 1 > j or j >= n+1:
+#                 continue
+#             if i == j:
+#                 for k in range(i-1, i+2):
+#                     if 1 > k or k >= n+1:
+#                         continue
+#                     _int_hat_dot_pow3_hat_inner(i, j, k, w, n, gw)
+#             else:
+#                 for k in (i, j):
+#                     _int_hat_dot_pow3_hat_inner(i, j, k, w, n, gw)
+
+# TODO implement the fancy recursive version commented out above.
+cpdef double int_hat_dot_pow3_hat(double[:] w, size_t n, double[:] gw) except *:
+
+    cdef:
+        size_t i, j, k, m, ct
+
+    for m in range(1, n+1):
+        for i in range(m-1, m+2):
+            for j in range(m-1, m+2):
+                for k in range(m-1, m+2):
+                    s = list({m, i, j, k})
+                    if len(s) > 2 or (len(s) == 2 and abs(s[0] - s[1]) > 1):
+                        continue
+                    # Otherwise...compute.
+                    ct = idx_ct_4hats(i, j, k, m, n, True)
+                    gw[m] += w[i] * w[j] * w[k] * int_4hats(ct, n)
 
 
 cpdef size_t idx_ct_4hats(size_t i, size_t j, size_t k, size_t m, size_t n, bint check) except *:
