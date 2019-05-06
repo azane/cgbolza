@@ -2,6 +2,7 @@ from scipy.optimize import fmin_cg
 from src.bolza import hhp
 import numpy as np
 import matplotlib.pyplot as plt
+from src.cg import cg
 
 
 def uu(w_, h_):
@@ -134,6 +135,11 @@ if __name__ == "__main__":
             callback=callback,
             maxiter=200,
             norm=2)
+    # cg(f=lambda w_: np.log(If(w_, h, hp)),
+    #    fp=lambda w_: Ifp(w_, h, hp)/If(w_, h, hp),
+    #    x0=w,
+    #    callback=callback,
+    #    maxiter=200)
 
     plt.ioff()
 
