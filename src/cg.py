@@ -31,7 +31,11 @@ def cg(f: Callable, fp: Callable, x0: np.ndarray, callback: Callable, maxiter: i
 
         # Compute beta. Polak Ribiere.
         if n > 0:
-            beta = gxn.dot(gxn - gxl)/gxl.dot(gxl)
+            den = gxl.dot(gxl)
+            if np.isclose(0, den):
+                pass
+            else:
+                beta = gxn.dot(gxn - gxl)/den
 
         # Update conjugate direction.
         sn = gxn + beta * sn
