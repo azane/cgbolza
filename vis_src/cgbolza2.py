@@ -4,11 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from src.cg import cg
 from cgbolza_h import *
+import sys
+from os.path import join
 
 if __name__ == "__main__":
 
     errs = []
-    xx = np.linspace(0, 1, 500)
 
     errf, errax = plt.subplots()
     errf.suptitle("Error Over Different N")
@@ -19,7 +20,8 @@ if __name__ == "__main__":
     def callback(w_, h_, hp_):
         errs[-1].append(If(w_, h_, hp_))
 
-    for n in  [10, 30, 50, 100, 200, 300, 400]: # [10, 30, 50, 100, 300]:
+    for n in [30, 50, 100, 150, 200, 250, 300, 350, 400]: # [10, 30, 50, 100, 300]:
+        xx = np.linspace(0, 1, 50+(n+1)*3)
         h, hp = hhp(xx, n)
         w = np.empty((n,))
         w[::2] = 1
@@ -38,38 +40,40 @@ if __name__ == "__main__":
 
         # <Plot Result>
         fig, uax = plt.subplots()
-        fig.suptitle(f"n = {n}")
+        fig.suptitle(f"Result for n = {n}")
         fig.subplots_adjust(right=0.75)
         ucolor = 'tab:blue'
 
-        fax = uax.twinx()
-        fcolor = 'tab:orange'
-
-        pax = uax.twinx()
-        pcolor = 'tab:green'
-
-        err = []
-        gnorm = []
-        percentxivoff = []
-        WW = []
+        # fax = uax.twinx()
+        # fcolor = 'tab:orange'
+        #
+        # pax = uax.twinx()
+        # pcolor = 'tab:green'
+        #
+        # err = []
+        # gnorm = []
+        # percentxivoff = []
+        # WW = []
 
         uax.set_xlabel('x')
         uax.set_ylabel('u(x)', color=ucolor)
         uax.tick_params(axis='y', labelcolor=ucolor)
         uax.plot(xx, uu(wstar, h), color=ucolor)
 
-        pax.spines["right"].set_position(("axes", 1.2))
-        make_patch_spines_invisible(pax)
-        pax.spines["right"].set_visible(True)
-        pax.set_ylabel("u'(x)", color=pcolor)
-        pax.tick_params(axis='y', labelcolor=pcolor)
-        pax.plot(xx, np.fabs(upup(wstar, hp)), color=pcolor, linestyle=":")
+        plt.savefig(join(sys.argv[1], f"result_{n}.png"), bbox_inches='tight')
 
-        fax.set_ylabel("f(u', u)", color=fcolor)
-        fax.tick_params(axis='y', labelcolor=fcolor)
-        fxiv = (upup(wstar, hp) ** 2 - 1) ** 2
-        fv = f(wstar, h, hp)
-        fax.plot(xx, fv, color=fcolor)
+        # pax.spines["right"].set_position(("axes", 1.2))
+        # make_patch_spines_invisible(pax)
+        # pax.spines["right"].set_visible(True)
+        # pax.set_ylabel("u'(x)", color=pcolor)
+        # pax.tick_params(axis='y', labelcolor=pcolor)
+        # pax.plot(xx, np.fabs(upup(wstar, hp)), color=pcolor, linestyle=":")
+        #
+        # fax.set_ylabel("f(u', u)", color=fcolor)
+        # fax.tick_params(axis='y', labelcolor=fcolor)
+        # fxiv = (upup(wstar, hp) ** 2 - 1) ** 2
+        # fv = f(wstar, h, hp)
+        # fax.plot(xx, fv, color=fcolor)
         # </Plot Result>
 
         errax.plot(errs[-1], label=f"n = {n}")
