@@ -4,6 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from src.cg import cg
 
+def make_patch_spines_invisible(ax):
+    ax.set_frame_on(True)
+    ax.patch.set_visible(False)
+    for sp in ax.spines.values():
+        sp.set_visible(False)
+
 
 def uu(w_, h_):
     return (w_[None, :] * h_).sum(1, keepdims=True)  # (x, 1)
@@ -43,7 +49,7 @@ if __name__ == "__main__":
     n = 100
     xx = np.linspace(0, 1, 1000)
     h, hp = hhp(xx, n)
-    w = np.random.normal(loc=1, scale=0.5, size=(n,))
+    w = np.random.normal(loc=0, scale=0.05, size=(n,))
 
     if n == 2 and len(xx) <= 500:
         delta = 0.007
@@ -101,10 +107,14 @@ if __name__ == "__main__":
 
     plt.ion()
     fig, uax = plt.subplots()
+    fig.subplots_adjust(right=0.75)
     ucolor = 'tab:blue'
 
     fax = uax.twinx()
     fcolor = 'tab:orange'
+
+    pax = uax.twinx()
+    pcolor = 'tab:green'
 
     err = []
     gnorm = []
@@ -117,6 +127,14 @@ if __name__ == "__main__":
         uax.set_ylabel('u(x)', color=ucolor)
         uax.tick_params(axis='y', labelcolor=ucolor)
         uax.plot(xx, uu(w_, h), color=ucolor)
+
+        pax.clear()
+        pax.spines["right"].set_position(("axes", 1.2))
+        make_patch_spines_invisible(pax)
+        pax.spines["right"].set_visible(True)
+        pax.set_ylabel("u'(x)", color=pcolor)
+        pax.tick_params(axis='y', labelcolor=pcolor)
+        pax.plot(xx, np.fabs(upup(w_, hp)), color=pcolor, linestyle=":")
 
         fax.clear()
         fax.set_ylabel("f(u', u)", color=fcolor)
@@ -135,8 +153,8 @@ if __name__ == "__main__":
         plt.pause(0.01)
 
     ret = None
-    fmin_cg(f=lambda w_: np.log(If(w_, h, hp)),
-            fprime=lambda w_: Ifp(w_, h, hp)/If(w_, h, hp),
+    fmin_cg(f=lambda w_: np.log(If(w_, h, hp) + 1),
+            fprime=lambda w_: Ifp(w_, h, hp)/(If(w_, h, hp) + 1),
             x0=w,
             disp=True,
             callback=callback,
