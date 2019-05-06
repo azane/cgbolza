@@ -40,10 +40,10 @@ def Ifp(w_, h_, hp_):
 
 
 if __name__ == "__main__":
-    n = 30
+    n = 100
     xx = np.linspace(0, 1, 1000)
     h, hp = hhp(xx, n)
-    w = np.random.normal(size=(n,))
+    w = np.random.normal(loc=1, scale=0.5, size=(n,))
 
     if n == 2 and len(xx) <= 500:
         delta = 0.007
@@ -108,6 +108,7 @@ if __name__ == "__main__":
 
     err = []
     gnorm = []
+    percentxivoff = []
 
     def callback(w_):
 
@@ -120,28 +121,47 @@ if __name__ == "__main__":
         fax.clear()
         fax.set_ylabel("f(u', u)", color=fcolor)
         fax.tick_params(axis='y', labelcolor=fcolor)
-        fax.plot(xx, f(w_, h, hp), color=fcolor)
+        fxiv = (upup(w_, hp)**2 - 1)**2
+        fv = f(w_, h, hp)
+        fax.plot(xx, fv, color=fcolor)
+        # fax.plot(xx, fxiv, color='tab:orange', label="f(u', 0)")
+        # fax.plot(xx, fuv, color='tab:brown', label="f(0, u)")
+        # fax.legend()
 
         err.append(If(w_, h, hp))
         gnorm.append(np.linalg.norm(Ifp(w_, h, hp)))
+        percentxivoff.append(fxiv.sum()/fv.sum())
 
         plt.pause(0.01)
 
-
-    # fmin_cg(f=lambda w_: np.log(If(w_, h, hp)),
-    #         fprime=lambda w_: Ifp(w_, h, hp)/If(w_, h, hp),
-    #         x0=w,
-    #         disp=True,
-    #         callback=callback,
-    #         maxiter=200,
-    #         norm=2)
-    cg(f=lambda w_: np.log(If(w_, h, hp)),
-       fp=lambda w_: Ifp(w_, h, hp)/If(w_, h, hp),
-       x0=w,
-       callback=callback,
-       maxiter=500)
+    ret = None
+    fmin_cg(f=lambda w_: np.log(If(w_, h, hp)),
+            fprime=lambda w_: Ifp(w_, h, hp)/If(w_, h, hp),
+            x0=w,
+            disp=True,
+            callback=callback,
+            maxiter=250,
+            norm=2)
+    # ret = cg(f=lambda w_: np.log(If(w_, h, hp) + 1),
+    #          fp=lambda w_: Ifp(w_, h, hp)/(If(w_, h, hp) + 1),
+    #          x0=w,
+    #          callback=callback,
+    #          maxiter=250)
+    # ret = cg(f=lambda w_: If(w_, h, hp),
+    #          fp=lambda w_: Ifp(w_, h, hp),
+    #          x0=w,
+    #          callback=callback,
+    #          maxiter=250)
 
     plt.ioff()
+
+    if ret is not None:
+        f = plt.figure()
+        f.suptitle("Normalized Search Direction Dot Products")
+        plt.xlabel("Iterations")
+        plt.ylabel("Iterations")
+        im = plt.imshow(ret.dot(ret.T))
+        f.colorbar(im)
 
     plt.figure()
     plt.ylabel("Log Functional")
@@ -154,6 +174,12 @@ if __name__ == "__main__":
     plt.yscale('log')
     plt.xlabel("Iterations")
     plt.plot(gnorm)
+
+    f = plt.figure()
+    f.suptitle("Portion of Error:\nIf(u', 0) / If(u', u)")
+    plt.xlabel("Iterations")
+    plt.plot(percentxivoff)
+
     plt.show()
 
 

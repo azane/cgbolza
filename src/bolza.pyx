@@ -18,3 +18,4 @@ cpdef hhp(const double[:] xx, const size_t n):
             hp[xi, i-1] =  hatp(xx[xi], i, n)
 
     return h_, hp_
+

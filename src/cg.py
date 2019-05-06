@@ -22,6 +22,8 @@ def cg(f: Callable, fp: Callable, x0: np.ndarray, callback: Callable, maxiter: i
     # Last steepest descent direction.
     gxl = xn*0
 
+    dirs = []
+
     for n in range(maxiter):
 
         # Calculate steepest descent direction.
@@ -34,10 +36,18 @@ def cg(f: Callable, fp: Callable, x0: np.ndarray, callback: Callable, maxiter: i
         # Update conjugate direction.
         sn = gxn + beta * sn
 
+        snn = np.linalg.norm(sn)
+        if np.isclose(0, snn):
+            print("Converged!")
+            break
+        else:
+            dirs.append(sn / snn)
+
         # Line Search HACK
         res = line_search(f=f, myfprime=fp, xk=xn, pk=sn, gfk=-gxn)
         nalpha = res[0]
         if nalpha is None:
+            # dirs.append(sn * np.nan)
             continue
 
         alpha = nalpha
@@ -46,8 +56,9 @@ def cg(f: Callable, fp: Callable, x0: np.ndarray, callback: Callable, maxiter: i
 
         callback(xn)
 
-        if np.linalg.norm(xn - xl) < 1e-4:
-            return True
+        # if np.linalg.norm(xn - xl) < 1e-3:
+        #     print("Converged!")
+        #     break
 
         # Line search.
         # HACK instead for test.
@@ -74,3 +85,5 @@ def cg(f: Callable, fp: Callable, x0: np.ndarray, callback: Callable, maxiter: i
         #     fl = fn
 
         gxl = gxn
+
+    return np.array(dirs)
