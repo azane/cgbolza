@@ -119,6 +119,7 @@ if __name__ == "__main__":
     err = []
     gnorm = []
     percentxivoff = []
+    WW = []
 
     def callback(w_):
 
@@ -149,6 +150,7 @@ if __name__ == "__main__":
         err.append(If(w_, h, hp))
         gnorm.append(np.linalg.norm(Ifp(w_, h, hp)))
         percentxivoff.append(fxiv.sum()/fv.sum())
+        WW.append(w_)
 
         plt.pause(0.01)
 
@@ -197,6 +199,11 @@ if __name__ == "__main__":
     f.suptitle("Portion of Error:\nIf(u', 0) / If(u', u)")
     plt.xlabel("Iterations")
     plt.plot(percentxivoff)
+
+    f = plt.figure()
+    f.suptitle("Parameters")
+    plt.xlabel("Iterations")
+    plt.plot(np.array(WW))
 
     plt.show()
 
