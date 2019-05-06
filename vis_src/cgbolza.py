@@ -46,10 +46,10 @@ def Ifp(w_, h_, hp_):
 
 
 if __name__ == "__main__":
-    n = 100
-    xx = np.linspace(0, 1, 1000)
+    n = 30
+    xx = np.linspace(0, 1, 600)
     h, hp = hhp(xx, n)
-    w = np.random.normal(loc=0, scale=0.05, size=(n,))
+    w = np.random.normal(loc=0, scale=1, size=(n,))
 
     if n == 2 and len(xx) <= 500:
         delta = 0.007
@@ -152,19 +152,19 @@ if __name__ == "__main__":
 
         plt.pause(0.01)
 
-    ret = None
-    fmin_cg(f=lambda w_: np.log(If(w_, h, hp) + 1),
-            fprime=lambda w_: Ifp(w_, h, hp)/(If(w_, h, hp) + 1),
-            x0=w,
-            disp=True,
-            callback=callback,
-            maxiter=250,
-            norm=2)
-    # ret = cg(f=lambda w_: np.log(If(w_, h, hp) + 1),
-    #          fp=lambda w_: Ifp(w_, h, hp)/(If(w_, h, hp) + 1),
-    #          x0=w,
-    #          callback=callback,
-    #          maxiter=250)
+    # ret = None
+    # fmin_cg(f=lambda w_: np.log(If(w_, h, hp) + 1),
+    #         fprime=lambda w_: Ifp(w_, h, hp)/(If(w_, h, hp) + 1),
+    #         x0=w,
+    #         disp=True,
+    #         callback=callback,
+    #         maxiter=250,
+    #         norm=2)
+    ret = cg(f=lambda w_: np.log(If(w_, h, hp) + 1),
+             fp=lambda w_: Ifp(w_, h, hp)/(If(w_, h, hp) + 1),
+             x0=w,
+             callback=callback,
+             maxiter=250)
     # ret = cg(f=lambda w_: If(w_, h, hp),
     #          fp=lambda w_: Ifp(w_, h, hp),
     #          x0=w,

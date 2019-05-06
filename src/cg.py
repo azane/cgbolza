@@ -40,15 +40,15 @@ def cg(f: Callable, fp: Callable, x0: np.ndarray, callback: Callable, maxiter: i
         if np.isclose(0, snn):
             print("Converged!")
             break
-        else:
-            dirs.append(sn / snn)
 
         # Line Search HACK
         res = line_search(f=f, myfprime=fp, xk=xn, pk=sn, gfk=-gxn)
         nalpha = res[0]
         if nalpha is None:
-            # dirs.append(sn * np.nan)
+            dirs.append(sn * np.nan)
             continue
+
+        dirs.append(sn / snn)
 
         alpha = nalpha
         xl = xn
