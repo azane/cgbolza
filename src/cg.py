@@ -1,5 +1,6 @@
 from typing import *
 import numpy as np
+from scipy.optimize import line_search
 
 # https://en.wikipedia.org/wiki/Nonlinear_conjugate_gradient_method
 
@@ -33,25 +34,43 @@ def cg(f: Callable, fp: Callable, x0: np.ndarray, callback: Callable, maxiter: i
         # Update conjugate direction.
         sn = gxn + beta * sn
 
+        # Line Search HACK
+        res = line_search(f=f, myfprime=fp, xk=xn, pk=sn, gfk=-gxn)
+        nalpha = res[0]
+        if nalpha is None:
+            continue
+
+        alpha = nalpha
+        xl = xn
+        xn = xn + alpha * sn
+
+        callback(xn)
+
+        if np.linalg.norm(xn - xl) < 1e-4:
+            return True
+
         # Line search.
-        last_good_alpha = 0
-        while True:
-            fn = f(xn + alpha*sn)
-
-            callback(xn + alpha * sn)
-
-            if abs(fn - fl) < 1e-2:
-                fl = fn
-                break
-
-            # If better, keep going.
-            if fn < fl:
-                last_good_alpha = alpha
-                alpha = alpha * 1.1
-            # If worse, then halve the step from the last good alpha.
-            elif fn > fl:
-                alpha = last_good_alpha + abs(last_good_alpha - alpha) / 2
-
-            fl = fn
+        # HACK instead for test.
+        # xn = xn + 0.05 * sn / np.linalg.norm(sn)
+        # callback(xn)
+        # last_good_alpha = 0
+        # while True:
+        #     fn = f(xn + alpha*sn)
+        #
+        #     callback(xn + alpha * sn)
+        #
+        #     if abs(fn - fl) < 1e-2:
+        #         fl = fn
+        #         break
+        #
+        #     # If better, keep going.
+        #     if fn < fl:
+        #         last_good_alpha = alpha
+        #         alpha = alpha * 1.1
+        #     # If worse, then halve the step from the last good alpha.
+        #     elif fn > fl:
+        #         alpha = last_good_alpha + abs(last_good_alpha - alpha) / 2
+        #
+        #     fl = fn
 
         gxl = gxn

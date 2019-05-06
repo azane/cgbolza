@@ -128,18 +128,18 @@ if __name__ == "__main__":
         plt.pause(0.01)
 
 
-    fmin_cg(f=lambda w_: np.log(If(w_, h, hp)),
-            fprime=lambda w_: Ifp(w_, h, hp)/If(w_, h, hp),
-            x0=w,
-            disp=True,
-            callback=callback,
-            maxiter=200,
-            norm=2)
-    # cg(f=lambda w_: np.log(If(w_, h, hp)),
-    #    fp=lambda w_: Ifp(w_, h, hp)/If(w_, h, hp),
-    #    x0=w,
-    #    callback=callback,
-    #    maxiter=200)
+    # fmin_cg(f=lambda w_: np.log(If(w_, h, hp)),
+    #         fprime=lambda w_: Ifp(w_, h, hp)/If(w_, h, hp),
+    #         x0=w,
+    #         disp=True,
+    #         callback=callback,
+    #         maxiter=200,
+    #         norm=2)
+    cg(f=lambda w_: np.log(If(w_, h, hp)),
+       fp=lambda w_: Ifp(w_, h, hp)/If(w_, h, hp),
+       x0=w,
+       callback=callback,
+       maxiter=500)
 
     plt.ioff()
 
